@@ -1,6 +1,8 @@
 https://github.com/Bobirmirzo
+https://sqlbak.com/academy/database-backup/
 https://www.onlinemanipal.com/blogs/important-types-of-indexes-in-sql-server
 https://www.mssqltips.com/sqlservertip/2429/how-to-identify-blocking-in-sql-server/
+https://www.sqlservercentral.com/articles/understanding-the-internals-of-a-data-page
 
 
 There are various types of indexes in SQL server: 
@@ -10,6 +12,17 @@ There are various types of indexes in SQL server:
 4.Filtered Index 
 5.Hash Index 
 6.Unique Index 
+
+
+Types of Pages in SQL server 
+Data Pages 
+Bulk Changed Map 
+Text/Image Pages 
+Page Free Space 
+Index Allocation Map 
+Secondary Global Allocation Map 
+Differential Changed Map 
+Global Allocation Map 
 
 
 Types of the Database in SQL server 
