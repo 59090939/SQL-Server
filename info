@@ -1,2 +1,19 @@
 https://github.com/Bobirmirzo
+https://www.onlinemanipal.com/blogs/important-types-of-indexes-in-sql-server
 https://www.mssqltips.com/sqlservertip/2429/how-to-identify-blocking-in-sql-server/
+
+
+There are various types of indexes in SQL server: 
+1.Clustered Index 
+2.Non-Clustered Index 
+3.Column Store Index 
+4.Filtered Index 
+5.Hash Index 
+6.Unique Index 
+
+
+Types of the Database in SQL server 
+tempdb 
+msdb 
+Master 
+Model 
