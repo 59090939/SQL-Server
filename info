@@ -42,6 +42,8 @@ msdb
 Master 
 Model 
 
+Database Files,The data files are categorized into two types: Master Data File and Secondary Data File(s). Only one Master Data File is possible for each database, and it keeps track of all the other files in the database. By convention, the Master Data File has the .mdf extension and the secondary files have .ndf.
+For the log files, the extension is .ldf. Each database must have at least one.
 
 MDF File Format 
 File Structure   A MDF file has the following data structure.
