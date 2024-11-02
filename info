@@ -79,3 +79,14 @@ Bits 5 to 7: A combined three-bit value, which indicate the page fullness as fol
 2: The page is 51–80% full
 3: The page is 81–95% full
 4: The page is 96–100% full
+
+
+var cfg ={"_id":"configsvr",
+    "members":[
+    {"_id":1,"host":"192.168.12.99:17017"},
+    {"_id":2,"host":"192.168.12.99:17018"},
+    {"_id":3,"host":"192.168.12.99:17019"}
+    ]
+};
+# 初始化集群配置
+rs.initiate(cfg)
