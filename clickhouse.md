@@ -1,4 +1,4 @@
-⬤ 'ShardedAndReplicated
+⬤ ShardedAndReplicated
 CREATE TABLE local_table ON CLUSTER default (
     Year UInt16,
     Quarter UInt8,
