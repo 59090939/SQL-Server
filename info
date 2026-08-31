@@ -10,6 +10,7 @@ https://stackoverflow.com/questions/25502950/sql-server-how-to-identify-if-table
 https://learn.microsoft.com/en-us/previous-versions/sql/sql-server-2008-r2/ms189051(v=sql.105)
 https://whoisactive.com/downloads/
 https://sqlserverfast.com      #about explain
+https://www.fromdual.com/blog/mysql-performance-schema-hints/
 
 
 Performance Tuning Checklist
@@ -91,3 +92,59 @@ var cfg ={"_id":"configsvr",
 };
 # 初始化集群配置
 rs.initiate(cfg)
+
+⬤ mysql 使用以下查询来识别没有主键的表
+mysql> SELECT t.table_schema, t.table_name
+       FROM information_schema.tables t LEFT JOIN
+       information_schema.statistics s
+       ON t.table_schema=s.table_schema AND t.table_name=s.table_name
+       AND s.non_unique=0
+       WHERE s.table_name IS NULL
+       AND t.table_schema NOT IN('sys', 'information_schema', 'mysql',
+       'performance_schema')
+       AND t.`TABLE_TYPE` <> 'VIEW';
+
+⬤ 使用以下查询查找没有索引的表
+mysql> SELECT t.table_schema, t.table_name FROM INFORMATION_SCHEMA.tables t
+       WHERE table_name NOT IN
+             (SELECT  table_name FROM (
+                      SELECT  table_name, index_name
+                      FROM information_schema.statistics
+                  GROUP BY  table_name, index_name) tab_ind_cols
+           GROUP BY table_name)
+AND table_schema NOT IN('sys', 'information_schema', 'mysql', 'performance_schema')
+AND TABLE_TYPE <> 'VIEW';
+
+
+⬤ 使用以下查询检查是否有多余索引
+mysql> SELECT * FROM sys.schema_redundant_indexes;
+
+
+⬤ Tables without a Primary Key
+SELECT t.TABLE_SCHEMA, t.TABLE_NAME, t.ENGINE
+  FROM information_schema.tables AS t
+  LEFT JOIN information_schema.TABLE_CONSTRAINTS AS tc
+         ON tc.TABLE_SCHEMA = t.TABLE_SCHEMA
+        AND tc.TABLE_NAME = t.TABLE_NAME
+        AND tc.CONSTRAINT_TYPE = 'PRIMARY KEY'
+ WHERE t.TABLE_TYPE = 'BASE TABLE'
+   AND tc.CONSTRAINT_TYPE IS NULL
+   AND t.TABLE_SCHEMA != 'mysql'
+
+SQL> SELECT DISTINCT t.table_schema, t.table_name
+  FROM information_schema.tables AS t
+  LEFT JOIN information_schema.columns AS c ON t.table_schema = c.table_schema AND t.table_name = c.table_name
+        AND c.column_key = "PRI"
+ WHERE t.table_schema NOT IN ('information_schema', 'mysql', 'performance_schema')
+   AND c.table_name IS NULL AND t.table_type NOT IN('VIEW', 'SEQUENCE')
+
+⬤ Duplicate indexes
+SQL> SELECT table_name, redundant_index_name, redundant_index_columns, dominant_index_name, dominant_index_columns, sql_drop_index
+  FROM sys.schema_redundant_indexes
+ WHERE redundant_index_columns = dominant_index_columns
+   AND table_schema = 'testtest'
+
+⬤ Partially redundant indexes
+SQL> SELECT table_name, redundant_index_name, redundant_index_columns, dominant_index_name, dominant_index_columns, sql_drop_index
+  FROM sys.schema_redundant_indexes
+ WHERE table_schema = 'testtest'
