@@ -1,0 +1,99 @@
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.8.13.tar.gz
+wget https://artifacts.elastic.co/downloads/kibana/kibana-6.8.13-linux-x86_64.tar.gz
+
+https://datadome.co/bot-management-protection/store-50-million-event-per-second-in-elasticsearch/
+https://oneuptime.com/blog/post/2026-01-24-elasticsearch-performance-configuration/view
+
+⬤ 查看实例负载
+curl -X GET "192.168.12.189:9200/_cat/nodes?v&s=load_1m:desc"
+[root@nodea config]# curl -X GET "192.168.12.189:9200/_cat/nodes?v&s=load_1m:desc"
+ip             heap.percent ram.percent cpu load_1m load_5m load_15m node.role master name
+192.168.12.189           22          94  22    0.16    0.26     0.43 mdi       *      nodea
+192.168.12.191           29          92  17    0.09    0.08     0.13 mdi       -      nodec
+192.168.12.190           27          92  29    0.01    0.11     0.18 mdi       -      nodeb
+
+⬤ 查看实例文档数倒序显示
+GET /_cat/indices?v&s=docs.count:desc
+health status index                           uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   .monitoring-es-6-2026.06.03     PXnH1crzQci-Hbree-Rnqw   1   1      58294          352     66.5mb         33.2mb
+green  open   .monitoring-es-6-2026.05.19     xs0KrXa9RjqF4EFTTYk-Qw   1   1      42990           82     49.6mb         24.8mb
+green  open   .monitoring-es-6-2026.04.15     9E5B3vVkQ-uQeFgsS6jymw   1   1      23101           44     25.6mb         12.8mb
+green  open   .monitoring-es-6-2026.04.25     V5clYhIcSv-KWbLWngfJ0A   1   1      20149          144     24.3mb         12.1mb
+
+⬤ 查看分片
+GET /_cat/shards?v
+
+⬤ 查看集群健康状态
+GET /_cluster/health
+
+⬤ 查看节点分片情况
+GET /_cat/allocation?v
+
+⬤ 创建索引
+PUT /test_index_20261021
+
+⬤ 删除索引
+Delete /test_index_20261021
+
+⬤ 查询数据
+POST /sample-json-data/_search
+{
+"query": {
+"match": {
+"_id": "-wz8CZ8BsBBzkezVWigD"
+}
+}
+}
+
+⬤ 删除数据
+DELETE /index_name/_doc/document_id
+DELETE /sample-json-data/_doc/6g39CZ8BsBBzkezVYcM0
+
+⬤ 取消任务
+POST /_tasks/clQFAL_VRrmnlRyPsu_p8A:1132678759/_cancel?pretty
+
+⬤ import data
+./logstash -f import_json.conf
+
+⬤ 使用 POST (系统自动生成ID)
+POST /products/_doc
+{
+  "name": "智能手机",
+  "price": 3999,
+  "category": "电子数码"
+}
+
+⬤ 使用 PUT (指定自定义ID)
+PUT /products/_doc/1001
+{
+  "name": "笔记本电脑",
+  "price": 6999,
+  "category": "电子数码"
+}
+
+⬤ 获取ES索引创建时间
+#!/bin/bash
+ES_URL="http://192.168.12.189:9200"
+ES_USER="elastic"
+ES_PWD="111111"
+echo -e "索引名称\t\t\t创建时间戳(ms)\t可读创建时间"
+echo "-------------------------------------------------------------------------"
+
+curl -s -u ${ES_USER}:${ES_PWD} "${ES_URL}/_cat/indices?v&h=index,cd" | \
+awk '
+NR>1 {
+    idx=$1
+    cd=$2
+    if(cd == "") next
+    sec = int(cd / 1000)
+    cmd = "date -d @" sec " \"+%Y-%m-%d %H:%M:%S\""
+    if ((cmd | getline dt) >0) {
+        printf "%-30s %15s %s\n", idx, cd, dt
+    }
+    close(cmd)
+}
+'
+⬤ 获取ES索引创建时间
+ES_USER="elastic"
+ES_PWD="111111"
+curl -s -u ${ES_USER}:${ES_PWD} "http://192.168.12.189:9200/_cat/indices?v&h=index,cd" | awk 'NR>1 && $2!="" {ts=$2;sec=int(ts/1000);cmd="date -d @"sec" \"+%Y-%m-%d %H:%M:%S\"";cmd | getline dt;close(cmd);printf "%-30s %15s %s\n",$1,$2,dt}'
