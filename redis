@@ -1,0 +1,40 @@
+⬤ connect redis
+redis-cli -h 127.0.0.1 -p 6379
+>AUTH
+redis-cli -c -h 127.0.0.1 -p 6379  (集群模式要加-c)
+
+⬤ Data tyes
+String  单值( Caching & counters)
+Hash    一个 key，多个 field（最容易出大 key）
+List    有序可重复链表(Queues & recent activity)
+Set     无序不重复( Unique values)
+ZSet    带分数有序不重复
+Sorted Sets
+Bitmaps
+HyperLogLog
+Geo Spatial Indexes
+
+⬤ redis key 总数量
+● dbsize  当前 db 里面 key 总数量，速度极快，不会阻塞 RedisRedis
+● info keyspace 查看所有 db 的 key 统计
+
+⬤ 常用类型统计数量的命令汇总
+● String Strlen
+● Hash：HLEN
+● Set：SCARD key
+● List：LLEN
+● ZSet：ZCARD
+● Stream：XLEN
+
+⬤ 常用类型数量查询命令汇总
+● Hash：hscan key 0 count 10
+● Set：sscan key  0 count 15
+● List：
+● ZSet：ZCARD
+● Stream：XLEN
+
+集群版
+127.0.0.1:7001> rename uesr:1002 user:1003
+(error) CROSSSLOT Keys in request don't hash to the same slot
+127.0.0.1:7001> rename user:1002 {user:1002}:a
+OK
