@@ -128,3 +128,16 @@ db0:keys=10,expires=0,avg_ttl=0
 (integer) 10
 
 redis-cli -c -h 127.0.0.1 -a root123 -p 6379 --bigkeys
+
+⬤ Specific section
+INFO server        # version, OS, uptime
+INFO clients       # connected clients, blocked clients
+INFO memory        # memory usage, fragmentation
+INFO stats         # commands processed, keyspace hits/misses
+INFO replication   # role, connected replicas, replication offset
+INFO cpu           # CPU usage
+INFO keyspace      # per-database key counts and TTL stats
+INFO latencystats  # latency percentiles (Redis 7.0+)
+INFO commandstats  # per-command call count, duration
+INFO all           # all sections
+INFO everything    # all + hidden sections
